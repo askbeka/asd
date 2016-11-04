@@ -1,25 +1,40 @@
-import merge from 'webpack-merge';
-import config from './webpack.config';
-import pkg from '../package.json';
+var merge = require('webpack-merge');
+var config = require('./webpack.config');
+var pkg = require('../package.json');
+var webpack = require('webpack');
 
-const devConfig = merge(config, {
-    entry: {
-        [pkg.name]: config.entry
-    },
-    devtool: 'source-map',
-    debug: true,
-    cache: true,
-    module: {
-        loaders: [{
-            test: /\.js/,
-            loader: 'babel',
-            query: {
-                babelrc: false,
-                cacheDirectory: true,
-                presets: ['es2015-node', 'stage-0']
-            }
-        }]
-    }
+var devConfig = merge(config, {
+  entry: {},
+  devtool: 'source-map',
+  debug: true,
+  cache: true,
+  module: {
+    loaders: [{
+      test: /\.js/,
+      loader: 'babel',
+      query: {
+        babelrc: false,
+        cacheDirectory: true,
+        presets: ['es2015-node', 'stage-0']
+      }
+    }]
+  },
+  plugins: [
+    new webpack.BannerPlugin('require("source-map-support").install();',
+      {
+        raw: true,
+        entryOnly: false
+      })
+  ]
 });
 
-export default devConfig;
+// Node version
+var v = parseInt(process.versions.node.split('.').shift());
+
+if (v < 4) {
+  v = 0;
+}
+
+devConfig.entry[pkg.name + '-' + v] = config.entry;
+
+module.exports = devConfig;

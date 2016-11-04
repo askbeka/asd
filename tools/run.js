@@ -1,32 +1,38 @@
-import yargs from 'yargs';
-import webpack from 'webpack';
-import parallelWebpack from 'parallel-webpack';
-import devConfig from './webpack.config.dev';
+var yargs = require('yargs');
+var webpack = require('webpack');
+var parallelWebpack = require('parallel-webpack');
+var devConfig = require('./webpack.config.dev');
 
-const isDebug = yargs.argv.prod;
+var isDebug = !yargs.argv.prod;
+
+var statsFormat = {
+    colors: true,
+    chunks: false,
+    chunkModules: false
+  };
 
 if (isDebug) {
-    let bundler = webpack(devConfig);
 
-    bundler.watch({}, (err, stats) => {
-        if (err) console.error(err);
-        console.log(stats.toString({
-            colors: true,
-            chunks: false,
-            chunkModules: false
-        }));
-    });
+  var bundler = webpack(devConfig);
 
-    process.on('exit', () => {
-        bundler.close();
-    });
+  var watcher = bundler.watch({}, function(err, stats) {
+    if (err) console.error(err);
+    console.log(stats.toString(statsFormat));
+  });
+
+  process.on('exit', function() {
+    watcher.close();
+  });
 
 } else {
-    
-    parallelWebpack.run(require.resolve('./webpack.config.prod'), {
-        watch: false,
-        stats: true,
-        maxRetries: 1,
-        maxConcurrentWorkers: 4
-    });
+
+  parallelWebpack.run(require.resolve('./webpack.config.prod'), {
+    watch: false,
+    stats: true,
+    colors: true,
+    maxRetries: 1,
+    maxConcurrentWorkers: 4
+  }, function(err) {
+    if (err) console.error(err);
+  });
 }

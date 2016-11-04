@@ -1,36 +1,39 @@
 {
-    "name": "best-devs-in-city",
-    "version": "1.0.0",
-    "description": "shows best devs in city according to their github profile",
-    "main": "index.js",
-    "scripts": {
-        "dev": "babel-node --presets es2015-node,stage-0 ./tools/run.js",
-        "prod": "babel-node --presets es2015-node,stage-0 ./tools/run.js --release",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "bin": {
-        "best-devs": "./bin/best-devs.js"
-    },
-    "author": "Beknar Askarov",
-    "license": "ISC",
-    "dependencies": {
-        "progress": "^1.1.8",
-        "yargs": "^6.3.0"
-    },
-    "devDependencies": {
-        "babel-cli": "^6.18.0",
-        "babel-core": "^6.18.2",
-        "babel-loader": "^6.2.7",
-        "babel-preset-es2015": "^6.18.0",
-        "babel-preset-es2015-node": "^6.1.1",
-        "babel-preset-es2015-node4": "^2.1.0",
-        "babel-preset-es2015-node5": "^1.2.0",
-        "babel-preset-es2015-node6": "^0.3.0",
-        "babel-preset-stage-0": "^6.16.0",
-        "bluebird": "^3.4.6",
-        "clean-webpack-plugin": "^0.1.13",
-        "parallel-webpack": "^1.5.0",
-        "webpack": "^1.13.3",
-        "webpack-merge": "^0.15.0"
-    }
+  "name": "best-devs",
+  "version": "1.0.0",
+  "description": "shows best devs in city according to their github profile",
+  "main": "lin/best-devs-0.js",
+  "scripts": {
+    "prepublish": "npm run prod",
+    "dev": "node ./tools/run.js",
+    "prod": "node ./tools/run.js --prod",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "best-devs": "./bin/best-devs.js"
+  },
+  "author": "Beknar Askarov",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^1.6.3",
+    "yargs": "^6.3.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2015-node": "^6.1.1",
+    "babel-preset-es2015-node4": "^2.1.0",
+    "babel-preset-es2015-node5": "^1.2.0",
+    "babel-preset-es2015-node6": "^0.3.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "bluebird": "^3.4.6",
+    "clean-webpack-plugin": "^0.1.13",
+    "exports-loader": "^0.6.3",
+    "imports-loader": "^0.6.5",
+    "parallel-webpack": "^1.5.0",
+    "source-map-support": "^0.4.6",
+    "webpack": "^1.13.3",
+    "webpack-merge": "^0.15.0"
+  }
 }

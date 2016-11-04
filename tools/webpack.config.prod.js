@@ -1,21 +1,26 @@
-import {createVariants} from 'parallel-webpack';
-import config from './webpack.config';
-import merge from 'webpack-merge';
-import pkg from '../package.json';
+var createVariants = require('parallel-webpack').createVariants;
+var config = require('./webpack.config');
+var merge = require('webpack-merge');
+var pkg = require('../package.json');
 
-const prodConfig = createVariants({node: [0, 4, 5, 6]}, (o) => merge(config, {
-    entry: {
-        [`${pkg.name}-${o.node}`]: config.entry
-    },
+module.exports = createVariants({
+  node: [0, 4, 5, 6]
+}, function(o) {
+
+  var prodConfig = merge(config, {
+    entry: {},
     module: {
-        loaders: [{
-            test: /\.js$/,
-            loader: 'babel',
-            query: {
-                presets: [(o.node ? (`node${o.node}-`) : '') + 'es2015', 'stage-0']
-            }
-        }]
+      loaders: [{
+        test: /\.js$/,
+        loader: 'babel',
+        query: {
+          presets: ['es2015' + (o.node ? ('-node' + o.node) : ''), 'stage-0']
+        }
+      }]
     }
-}));
+  })
 
-export default prodConfig;
+  prodConfig.entry[pkg.name + '-' + o.node] = config.entry;
+
+  return prodConfig;
+});

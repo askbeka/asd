@@ -2,27 +2,27 @@
 
 // CLI config
 var argv = require('yargs')
-    .usage('Usage $0 [options]')
-    .alias('c', 'city')
-    .describe('c', 'Set city')
-    .alias('h', 'help')
-    .describe('h', 'Show help')
-    .help('h')
-    .default('c', 'Krakow')
-    .argv;
+  .usage('Usage: $0 <city> [,options]')
+  .command("city", 'City', {alias: 'city'})
+  .required( 1, "City is required" )
+  .option('u', {alias: 'username', type: 'string', describe: 'Username'})
+  .option('p', {alias: 'password', type: 'string', describe: 'Password'})
+  .option('l', {alias: 'language', type: 'string', describe: 'Language', default: 'javascript'})
+  .option('t', {alias: 'top', type: 'number', describe: 'Top', default: 3})
+  .help('h')
+  .alias('h', 'help')
+  .argv;
 
 // Node version
-var v = process.version;
+var v = parseInt(process.versions.node.split('.').shift());
 
-// Get source for specific version
-if (v >= '6.0.0') {
-    var best = require('../lib/best-devs-6.js');
-} else if (v >= '5.0.0') {
-    best = require('../lib/best-devs-5.js');
-} else if (v >= '4.0.0') {
-    best = require('../lib/best-devs-4.js');
-} else {
-    best = require('../lib/best-devs.js');
+if (v < 4) {
+    v = 0;
 }
 
-best.get({city: argv.city});
+  // Get source for specific version
+var best = require('../lib/best-devs-' + v + '.js').default;
+
+argv.city = argv._[0];
+
+best(argv);

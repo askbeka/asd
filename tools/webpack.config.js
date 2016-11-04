@@ -1,24 +1,45 @@
-import path from 'path';
-import pkg from '../package.json';
-import CleanWebpackPlugin from 'clean-webpack-plugin';
+var path = require('path');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
+var pkg = require('../package.json');
+var webpack = require('webpack');
 
-const
-    externals = Object.keys(pkg.dependencies).reduce((prev, cur) => ({...prev, [cur]: cur}), {}),
-    root = path.resolve(__dirname, '..');
+var externals = Object.keys(pkg.dependencies).reduce(function(prev, cur) {
 
-const config = {
-    target: 'node',
-    output: {
-        path: path.join(root, 'lib'),
-        filename: '[name].js'
-    },
-    resolve: {
-        root: path.join(root, 'src'),
-        modulesDirectories: ['node_modules'],
-        extensions: ['.js']
-    },
-    plugins: [new CleanWebpackPlugin(['lib'], {root: root, verbose: false})],
-    externals
+  prev[cur] = cur;
+  return prev;
+
+}, {});
+
+var config = {
+  entry: path.join(__dirname, '../src'),
+  target: 'node',
+  output: {
+    path: path.join(__dirname, '../lib'),
+    libraryTarget: 'commonjs2',
+    filename: '[name].js'
+  },
+  resolve: {
+    root: path.join(__dirname, '../src'),
+    modulesDirectories: ['node_modules'],
+    extensions: ['.js']
+  },
+  plugins: [
+    // new webpack.ProvidePlugin({
+    //   'fetch': 'imports?this=>global!exports?global.fetch!node-fetch'
+    // }),
+    new CleanWebpackPlugin(['lib'], {
+      root: path.join(__dirname, '..'),
+      verbose: false
+    })],
+  externals: externals,
+  node: {
+    console: false,
+    global: false,
+    process: false,
+    Buffer: false,
+    __filename: false,
+    __dirname: false,
+  },
 };
 
-export default config;
+module.exports = config;
